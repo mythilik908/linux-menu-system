@@ -3,8 +3,9 @@
  * https://tldp.org/HOWTO/NCURSES-Programming-HOWTO/
  * https://man7.org/linux/man-pages/index.html
  * https://invisible-island.net/ncurses/ncurses-intro.html
- * run code with using command-  gcc -o Code2_1002143211 Code2_1002143211.c -lncurses
+ * run code with using command-  gcc -o menu menu.c -lncurses
 */
+
 
 #include <ncurses.h>
 #include <dirent.h>
@@ -35,11 +36,12 @@ int main()
     int ch = 0 ;	
     char initialcwd[1024];
     strcpy(initialcwd,getcwd(cwd,sizeof(cwd)));	
-    
+
+  // loop to display the menu to select operations
     while(true) {
 
 		
-		  // displaying time
+		  // displaying current time
 			time_t T = time(NULL);
 			struct tm *time ;
 			time = localtime(&T);
@@ -60,7 +62,7 @@ int main()
 			"8 Exit\n");
         refresh();
 	   
-    // creating a new window     
+    // displays window once the program runs    
     int x,y;
     getmaxyx(stdscr,y,x);
     WINDOW * inputwin;
@@ -70,13 +72,15 @@ int main()
     wrefresh(inputwin);
     keypad(inputwin,true);
     attron(COLOR_PAIR(1));
+   // taking the input from user
     mvwprintw(inputwin,1,1,"Enter input here :");
     attron(COLOR_PAIR(3));
     ch = wgetch(inputwin) - '0';	
-    wrefresh(inputwin);        
-    clear();
- 
-    // creating a new window to execute the functionionalities
+    wrefresh(inputwin);  
+   // clearing the screen to display the functionalities in a new window
+    clear();  
+	    
+    // creating a new window to execute the functionalities
      WINDOW * datawin;
      datawin = newwin(y,x,0,0);
      wrefresh(datawin);
@@ -86,6 +90,7 @@ int main()
 	
     case 1 :
 	{ 
+		// displaying first 10 files from current directory
 		int count = 0;
 		char *filenames[100];
 		struct stat st;
@@ -114,7 +119,7 @@ int main()
 	}
     case 2:
 	{ 
-		// displaying first 10 directories
+		// displaying first 10 directories in the current directory
 		int count = 0;
 		struct stat s;
 		struct dirent *file;
@@ -163,7 +168,7 @@ int main()
 
 
     case 4: { 
-    	// running a file
+    	// running any file
 		char path[256];
 		int status;
 	        attron(COLOR_PAIR(1));
@@ -270,7 +275,7 @@ int main()
  
 
 	case 7: { 
-		    // resetting directory to initial state
+		    // resetting directory to initial directory
 			endwin();
 			attron(COLOR_PAIR(1));
 			printw("Resetting the program..\n");
